@@ -71,6 +71,79 @@ que deben estar muy bien diseñadas para que escalen desde el primer momento.
 centralizada, ya que se perdería la idea de la descentralización. Por ejemplo,
 no pueden depende de una API. Aún así, pueden depende de otras DApps.
 
+==== Autenticación en las DApps
+
+A veces es necesario la funcionalidad de las cuentas de usuarios en una
+aplicación. Los datos asociados a un usuario sólamente debería poder ser
+modificados por éste. Las DApps no pueden funcionar mediante un sistema de
+usuario y contraseña tradicional como hacen las aplicaciones centralizadas.
+
+Existen diferentes formas de implementar cuentas de usuarios en DApps, aunque la
+más utilizada es usando un sistema de clave pública-privada. Un hash de la
+clave pública podría ser el ID de la cuenta de usuario. Para realizar un cambio
+en unos datos asociados a una cuenta de usuario, la instrucción de cambiar los
+datos debe firmarse utilizando la clave privada del usuario.
+
+CAUTION: Si un usuario pierde su clave privada, pierde *para siempre* el acceso
+a su cuenta.
+
+==== Oráculos
+
+Una DApp no debería depender de una aplicación centralizada ya que supone un
+punto único de fallo, pero en algunos casos no queda otra opción si queremos
+obtener datos como precios, información sobre el tiempo o números aleatorios.
+
+Para acceder a estos datos necesitaríamos lo que se conoce como un *oráculo*,
+que es el encargado de proveer estos datos. El oráculo actúa como un
+intermediario de confianza. Un oráculo puede obtener los datos desde varias
+fuentes y realizar comprobaciones para validar el dato.
+
+****
+En Ethereum podemos utilizar link:http://www.oraclize.it/[Oraclize] que
+proporciona pruebas mediante link:https://tlsnotary.org/[TLSNotary] de que los
+datos son válidos.
+****
+
+==== Divisa interna
+
+Para que una aplicación sea sostenible debe ser viable económicamente para que
+el propietario pueda seguir desarrollándola. Las DApps no tienen
+un propietario, sin embargo, los nodos que corren el software necesitan
+_hardware_ y otros recursos para poder funcionar, esto quiere decir que estos
+nodos deben obtener algún beneficio por el hecho de estar ejecutando el
+_software_. Aquí es donde entra en juego las divisas internas.
+
+La mayoría de las DApps cuentan con una divisa interna y es el protocolo de
+consenso quien decide cuánto se lleva cada nodo. Dependiendo del protocolo de
+concenso puede ser que sólo un tipo determinado de nodo consiga esta divisa.
+
+****
+En el caso de Bitcoin, los mineros son los nodos que mantienen la red segura
+y funcionando y son aquellos que reciben la recompensa. Los nodos "normales"
+no reciben nada.
+****
+
+Lo siguiente que podríamos preguntarnos es: ¿Para qué nos puede servir esta
+divisa? Según nos dice la economía, cualquier cosa que tenga una demanda tiene
+un valor asociado. Si los usuarios deben pagar por usar la DApp, la demanda de
+la divisa crecerá y el valor de ésta también. Si la cantidad de divisa que se
+genera está limitada entonces su valor aumentará por la falta de ésta.
+
+[NOTE]
+====
+La única desventaja de este sistema es que las DApps no son gratuitas. Aquí las
+aplicaciones centralizadas tienen la ventaja de poder ofrecer un servicio gratis
+a cambio de publicidad y servicios _premium_.
+====
+
+==== Algunas aplicaciones descentralizadas
+
+* link:https://bitcoin.org/en/[Bitcoin]
+* link:https://www.ethereum.org/[Ethereum]
+* link:https://www.hyperledger.org/[Hyperledger]
+* link:https://ipfs.io/[IPFS]
+* link:https://namecoin.org/[Namecoin]
+
 === Blockchain
 
 === Ethereum

@@ -26,5 +26,5 @@ include::content/chapter03.adoc[]
 ---
 
 [.text-right]
-[width="20%""]
+[width="10%""]
 image::https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-sa.png[CC-BY-SA]
