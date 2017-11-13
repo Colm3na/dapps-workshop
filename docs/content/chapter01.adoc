@@ -1,0 +1,76 @@
+== Introducción
+
+=== Qué es una DApp
+
+Una DApp es un tipo de aplicación de Internet cuyo _backend_ se ejecuta en una
+red _peer-to-peer_ y, además, es _open source_. Ningún nodo de la red tiene
+control completo sobre el funcionamiento de la aplicación.
+
+Dependiendo de la funcionalidad de la DApp, se pueden usar múltiples estructuras
+para almacenar los datos. *Bitcoin* es una DApp que usa una *_Blockchain_* para
+almacenar los datos.
+
+Los nodos de la red pueden ser cualquier sistema conectado a Internet, por lo
+que detectar y prevenir quien distribuye información inválida es una tarea
+complicada.
+
+==== Protocolos de concenso
+
+Como no tenemos un nodo central que pueda decidir cuáles son los datos válidos
+o inválidos, necesitaremos un *protocolo* que permita a la red decidir.
+Actualmente existen una serie de protocolos de conceso que intentan solucionar
+este problema. Uno de los protocolos de conceso más populares es el
+_Proof of Work_.
+
+// TODO Apartado sobre algún protocolo de concneso
+
+==== Clientes de la DApp
+
+Para usar una DApp, necesitamos un nodo conectado a la red descentralizada para
+poder intercambiar información con los otros nodos. Este nodo puede actuar
+como pasarla para interactuar con la red y proporcionar una API que otras
+aplicaciones consuman.
+
+.Cliente de la DApp
+[width=50%, align="center"]
+image::figure01.png[Figura 1]
+
+NOTE: Los clientes de las DApps deben ser _open source_ y su código debe ser
+público, sino toda la idea de la descentralización se vendría abajo.
+
+Como desplegar un nodo puede ser una tarea complicada y no apta para usuarios
+no técnicos, podemos encontrar casos en los que se despliega un nodo que da
+servicio a múltiple clientes para facilitarles el acceso a la DApp.
+
+CAUTION: *Aplicación descentralizada != Aplicación distribuida*
+
+==== Ventajas y desventajas de una DApp
+
+===== Ventajas
+
+* Son tolerantes a fallos ya que no existe un *punto único de fallo* porque
+las aplicaciones descentralizadas son aplicaciones distribuidas.
+* Evitan la censura, ya que no existe una autoridad central a la que un
+govierno pueda hacer presión para que la ejerza.
+* No pueden ser bloqueadas, ya que no dependen de una única dirección IP.
+La única opción sería intentar localizar todos los nodos de la red y
+desconectarlos uno por uno, algo bastante complicado si la red es lo
+suficientemente grande y se encuentra lo suficientemente distribuida.
+* Ya que no existe una autoridad que controle la red, es más fácil depositar
+la confianza en ella.
+
+===== Inconvenientes
+
+* La corrección de _bugs_ o la actualización son complicadas ya que todos los
+nodos de la red deben actualizar su software.
+* Algunas aplicaciones requieren que el usuario verifique su identidad y no
+existe una autoridad central que pueda realizar la verificación.
+* Son más complicadas de desarrollar debido a los protocolos de consenso y a
+que deben estar muy bien diseñadas para que escalen desde el primer momento.
+* No pueden depender de una aplicación de terceros si dicha aplicación es
+centralizada, ya que se perdería la idea de la descentralización. Por ejemplo,
+no pueden depende de una API. Aún así, pueden depende de otras DApps.
+
+=== Blockchain
+
+=== Ethereum

@@ -1,0 +1,30 @@
+:doctype: book
+:firstname: Diego
+:lastname: Fernández Barrera
+:author: Diego Fernández
+:copyrights: Attribution-NonCommercial-NoDerivatives 4.0 International CC BY-NC-ND 4.0
+:lang: es
+:docinfo:
+:revnumber: 0.1.0
+:keywords: ethereum, workshop, dapps, blockchain
+:toc:
+:toc-title: Índice
+:toc-position: left
+:nofooter:
+:header:
+:icons: font
+:table-caption: Tabla
+:figure-caption: Figura
+:imagesdir: images
+
+= Desarrollo de DApps con Ethereum
+
+include::content/chapter01.adoc[]
+include::content/chapter02.adoc[]
+include::content/chapter03.adoc[]
+
+---
+
+[.text-right]
+[width="20%""]
+image::https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-sa.png[CC-BY-SA]

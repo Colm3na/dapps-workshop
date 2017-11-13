@@ -1,0 +1,21 @@
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - mkdir -p output
+  - docker pull asciidoctor/docker-asciidoctor
+
+script:
+  - mkdir -p $TRAVIS_BUILD_DIR/docs/output/images
+  - cp $TRAVIS_BUILD_DIR/docs/images/* $TRAVIS_BUILD_DIR/docs/output/images/
+  - docker run -it -v $TRAVIS_BUILD_DIR/docs:/documents/ asciidoctor/docker-asciidoctor asciidoctor -D output/ "*.adoc"
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  on:
+    branch: master
+  local_dir: docs/output
