@@ -20,7 +20,9 @@
 = Desarrollo de DApps con Ethereum
 
 include::content/chapter01.adoc[]
+
 include::content/chapter02.adoc[]
+
 include::content/chapter03.adoc[]
 
 ---

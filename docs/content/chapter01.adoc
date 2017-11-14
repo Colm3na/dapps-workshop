@@ -175,7 +175,8 @@ durante un periodo y un número aleatorio llamado *_nonce_*. El bloque es
 cumple unas condiciones impuestas.
 
 El proceso de minado se basa en variar el valor del nonce hasta que el
-_hash_ del bloque cumpla la condición impuesta.
+_hash_ del bloque cumpla la condición impuesta. Un minero que encuentra el
+_hash_ de un bloque es recompensado por la red por hacer el trabajo.
 
 ****
 En el caso de Bitcoin se exige que el hash calculado sea menor que un valor
@@ -249,3 +250,94 @@ pueda verificar fácilmente la integridad y que un atacante lo tenga muy
 complicado para generar una cadena de bloques falsa.
 
 === Ethereum
+
+[width="10%", align="center"]
+image::figure03.png[Figura 03]
+
+*Ethereum* es una plataforma descentralizada (al igual que Bitcoin), pero su
+objetivo en lugar de crear un libro de cuentas es servir como Backend para
+otras DApps. La plataforma permite la ejecución de programas conocidos como
+*Smart Contracts* que se programan usando el lenguaje de programación
+*Solidity*.
+
+Ethereum usa una Blockchain para almacenar los datos de los Smart Contracts y
+utiliza _proof-of-work_ como protocolo de concenso.
+
+Los Smart Contracts tienen las siguientes propiedades:
+
+* Se encuentran en funcionamiento prácticamente el 100% del tiempo, ya que para
+que dejasen de funcionar debería pararse completamente toda la red de Ethereum.
+* No hay censura posible, ya que no pueden ser detenidos.
+* Su comportamiento está definido en código, por lo que un contrato no puede
+incumplirse (lo que no quiere decir que no puedan tener _bugs_).
+
+NOTE: Solidity es el lenguaje de programación oficial, pero existen otros
+lenguajes.
+
+Ethereum cuenta con una divisa interna llamada *Ether* que permite la ejecución
+de estos Smart Contracts. La ejecución se ha de pagar con Ethers como si éstos
+fuesen la gasolina que alimenta a los Smart Contracts. La cantidad de Ether que
+se usa para la ejecución de los Smart Contracts se conoce como *gas*. Este gas
+va destinado a los mineros que ejecutan el código.
+
+Al igual que en POO creamos instancias de una clase, en Ethereum creamos
+instancias de un Smart Contract. El proceso de crear una instancia y almacenarla
+en la Blockchain se conoce como *desplegar un Smart Contract* y también cuesta
+gas, puesto que estamos almacenando código en la Blockchain. Los Smart Contracts
+tienen métodos al igual que las clases y podemos llamarlos para ejecutar su
+código.
+
+NOTE: No todas las llamadas a métodos de los Smart Contracts requieren gas. Por
+ejemplo, cualquier operación de sólo lectura no necesita modificar ningún valor
+en la Blockhain, por lo que es gratis e instantáneo.
+
+Cuando se despliega un Smart Contract, a éste se le asigna una dirección al
+igual que una instancia de una clase tiene una dirección en memoria RAM. Para
+interactuar con un contrato desplegado necesitamos conocer su dirección y su
+*ABI*.
+
+La *ABI* de un Smart Contract es la información de cómo se debe llamar a un
+método, esto es la ID del método, los parámetros de entrada y el valor de
+retorno. En Ethereum es posible enviar datos (_Payload_) en una transacción,
+lo que permite (conociendo la ABI del Smart Contract), llamar a sus métodos.
+
+Además de las direcciones de los Smart Contracts existen las direcciones de
+usuarios. La dirección de un usuario no contiene código que pueda ser ejecutado.
+Tanto una dirección de un usuario como de un Smart Contract tiene un balance
+de Ethers que pueden enviarse y recibirse.
+
+CAUTION: No confundir el Ether enviado en una transacción con el gas que cuesta
+realizar la transacción. Por ejemplo, para llamar a un método de un contrato
+no hace falta enviar ethers (el valor de la transacción es 0), pero habría que
+pagar el gas correspondiente a su ejecución.
+
+==== Cuentas de usuario
+
+A diferencia de los Smart Contracts, las direcciones de las cuentas de usuario
+tienen asociada una clave pública y una clave privada. Un usuario que quiera
+realizar una transacción generará una clave privada y a partir de ésta obtendrá
+su clave pública correspondiente. La dirección de la cuenta de usuario se
+obtiene a partir de un _hash_ de la clave pública.
+
+==== Transacciones
+
+Una *transacción* es un dato que una dirección envía a otra y ha sido firmado
+por la fuente. En Ethereum el algoritmo de firmado que se usa es el ECDSA
+(_Elliptic Curve Digital Signature Algorithm_) que es un algoritmo basado en
+curvas elípticas. Una trasacción contiene los siguientes datos:
+
+* *Destinatario*: Dirección del destinatario de la transacción. Puede ser una
+cuenta de usuario o un Smart Contract.
+* *Valor*: Cantidad de ethers que se envían en la transacción. Puede ser 0.
+* *Límite de gas*: Si la transacción require una catidad de gas superior al
+límite indicado sería abortada. Cuánto más compleja sea la ejecución de un
+método, más gas consumirá su llamada.
+* *Precio del gas*: Cantidad de ethers a pagar por cada unidad de gas. Las
+transacciones mejor pagadas serán minadas antes, ya que los mineros ganarían
+más con ellas.
+* *Nonce*: Contador que se incrementa para evitar posibles ataques de _replay_.
+* *Payload*: Datos que podemos enviar en la transacción. También influyen en
+el gas total a pagar.
+* *`v`, `r` y `s`*: Parámetros que definen la firma digital. A partir de ellos
+se puede obtener la clave pública y por lo tanto la dirección de la cuenta (por
+eso la dirección de origen no aparece en la transacción).
