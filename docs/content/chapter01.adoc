@@ -51,7 +51,7 @@ CAUTION: *Aplicación descentralizada != Aplicación distribuida*
 * Son tolerantes a fallos ya que no existe un *punto único de fallo* porque
 las aplicaciones descentralizadas son aplicaciones distribuidas.
 * Evitan la censura, ya que no existe una autoridad central a la que un
-govierno pueda hacer presión para que la ejerza.
+gobierno pueda hacer presión para que la ejerza.
 * No pueden ser bloqueadas, ya que no dependen de una única dirección IP.
 La única opción sería intentar localizar todos los nodos de la red y
 desconectarlos uno por uno, algo bastante complicado si la red es lo
@@ -159,10 +159,93 @@ interna.
 
 Una *_Blockchain_* es una base de datos distribuida, formada por cadenas de
 bloques diseñadas para evitar su modificación una vez que un dato ha sido
-publicado usando un sellado de tiempo confiable y enlazando a un bloque
-anterior.
+publicado. Se usa un sellado de tiempo confiable y cada bloque que se añade
+se enlaza al bloque anterior.
 
 Es adecuada para almacenar de forma creciente datos ordenados en el tiempo y
-sin posibilidad de modificación ni revisión. 
+sin posibilidad de modificación ni revisión.
+
+.Blockchain
+[align="center"]
+image::figure02.jpg[Figura 2]
+
+Un bloque contiene información referente a los datos que se han almacenado
+durante un periodo y un número aleatorio llamado *_nonce_*. El bloque es
+*minado* y añadido a la cadena cuando se encuentra un _hash_ del mismo que
+cumple unas condiciones impuestas.
+
+El proceso de minado se basa en variar el valor del nonce hasta que el
+_hash_ del bloque cumpla la condición impuesta.
+
+****
+En el caso de Bitcoin se exige que el hash calculado sea menor que un valor
+`target` que es elegido por los nodos de la red para ajustar la dificultad de
+minar un bloque. Esto se realiza para intentar que la diferencia de tiempo
+entre el minado de bloques sea de aproximadamente 10 minutos.
+****
+
+Cada bloque que se añade lleva el hash del bloque anterior. Este sistema provoca
+que un mínimo cambio que se produzca en un bloque provocaría que ese bloque y
+todos los que vienen a continuación queden inmediatamente invalidados, pues
+los _hashes_ de los bloques siguientes serían incorrectos. Esta comprobación es
+muy sencilla de efectuar para un ordenador, por lo que es muy fácil verificar
+la integridad de la cadena de bloques.
+
+.Ejemplo de bloque en Bitcoin
+****
+
+[cols="p,p,p"]
+|===
+
+| Número mágico
+| Siempre es `0xD9B4BEF9`
+| 4 bytes
+
+| Tamaño de bloque
+| Número de bytes que faltan hasta el final del bloque
+| 4 bytes
+
+| Versión del bloque
+| Se incrementa con las actualizaciones
+| 4 bytes
+
+| Hash del bloque anterior
+| Hash de 256-bit correspondiente al bloque anterior
+| 32 bytes
+
+| Hash de todas las transacciones del bloque
+| Hash de 256-bit de la raíz del árbol de Merkle
+| 32 bytes
+
+| Timestamp
+| Segundos desde 1970-01-01T00:00 UTC
+| 4 bytes
+
+| Target
+| Es el valor máximo que el _hash_ calculado puede tener
+| 4 bytes
+
+| Nonce
+| Número de 32-bit que puede tomar cualquier valor
+| 4 bytes
+
+| Contador de transacciones
+| Número de transacciones
+| 1 - 9 bytes
+
+| Transacciones
+| Lista de transacciones
+| Depende del número de transacciones
+|===
+****
+
+Los nodos de una DApp pueden usar una cadena de bloques para almacenar los
+datos y compartirlo con el resto de los nodos. Cada nodo debe verificar que
+la cadena de bloques recibida sea correcta para aceptarla.
+
+NOTE: La clave de este sistema es que es muy difícil generar una cadena de
+bloques y muy fácil comprobar que es correcta. Esto hace que cualquier nodo
+pueda verificar fácilmente la integridad y que un atacante lo tenga muy
+complicado para generar una cadena de bloques falsa.
 
 === Ethereum
