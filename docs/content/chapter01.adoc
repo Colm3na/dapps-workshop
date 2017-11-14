@@ -136,6 +136,17 @@ aplicaciones centralizadas tienen la ventaja de poder ofrecer un servicio gratis
 a cambio de publicidad y servicios _premium_.
 ====
 
+==== DApps con autorización
+
+Hasta hora hemos estado hablando de DApps que son abiertas, es decir, que pueden
+ser usadas por cualquiera. Por otra parte, existen DApps que necesitan
+autorización para ser usadas, son conocidas como *_Permissioned DApps_*.
+
+Estas DApps tienen todas las características de las DApps abiertas, pero para
+entrar en la red se requiere autorización. Las DApps con autorización no usan
+los mismos protocolos de concenso que las DApps abiertas y no tienen una divisa
+interna.
+
 ==== Algunas aplicaciones descentralizadas
 
 * link:https://bitcoin.org/en/[Bitcoin]
@@ -145,5 +156,13 @@ a cambio de publicidad y servicios _premium_.
 * link:https://namecoin.org/[Namecoin]
 
 === Blockchain
+
+Una *_Blockchain_* es una base de datos distribuida, formada por cadenas de
+bloques diseñadas para evitar su modificación una vez que un dato ha sido
+publicado usando un sellado de tiempo confiable y enlazando a un bloque
+anterior.
+
+Es adecuada para almacenar de forma creciente datos ordenados en el tiempo y
+sin posibilidad de modificación ni revisión. 
 
 === Ethereum
