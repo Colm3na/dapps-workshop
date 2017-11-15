@@ -1,7 +1,68 @@
 == Smart Contracts
 
-=== Ethereum Virtual Machine (EVM)
+=== Geth
 
-=== El lenguaje Solidity
+Antes de comenzar el desarrollo debemos ejecutar un nodo de Ethereum que nos
+permita la comunicación con la red y desplegar contratos. Actualmente existen
+varios clientes de Ethereum que se pueden utilizar:
+
+* link:https://github.com/ethereum/go-ethereum[*geth*]: Es el cliente oficial
+desarrollado por la fundación Ethereum. Está desarrollado con Go. *Es el que
+usaremos en este _workshop_*.
+* link:https://github.com/paritytech/parity[*parity*]: Es el segundo cliente
+más usado. Desarrollado con Rust por Gavin Wood, uno de los fundadores de
+Ethereum. Es quizá el cliente más completo, ya que es también un navegador de
+DApps.
+* link:https://github.com/ethereum/cpp-ethereum[*cpp-ethereum*]: La tercera
+implementación más usada, escrita en C++.
+
+Existen otras implementaciones menos usadas en multitud de lenguajes de
+programación como JavaScript, Java, Python, Haskell, etc.
+
+==== Instalación
+
+Tenemos varias opciones para instalar Geth. Puesto que está escrito en Go basta
+con descargarnos el binario adecuado para nuestra plataforma. También podemos
+usar Docker para ejecutarlo. Otra opción sería compilarlo desde las fuentes.
+
+Podemos ejecutar Geth usando Docker con el siguiente comando:
+
+.Ejecutar geth con Docker
+[source, bash]
+----
+docker run -it -p 30303:30303 ethereum/client-go
+----
+
+Una vez se esté ejecutando geth, comenzará a descargar la blockchain de
+Ethereum al completo, lo cual es un proceso largo y requiere varios gigabytes
+disponibles para almacenar toda la cadena. Además, desplegar un contrato e
+interactuar con ellos requiere disponer con una cuenta con ethers para poder
+pagar a los mineros.
+
+==== Crear red privada para desarrollo
+
+Afortunadamente existen varias redes de Ethereum actualmente además de la red
+principal (_main net_). Estas redes alternativas conocidas como _test nets_
+nos permiten desarrollar sin tener que pagar dinero real. Las tres _test nets_
+más conocidas son:
+
+* Ropsten
+* Kovan
+* Rinkeby
+
+También existe la posibilidad de crear nuestra propia red privada de Ethereum en
+la que nosotros seamos el único nodo. Si usamos este método debemos tener en
+cuenta que necesitamos minar para que la red funcione. Ejecutar geth con el
+parámetro `--mine` bastaría.
+
+====
+Haciendo una analogía con un sistema de integración continua tendríamos:
+
+* Red privada: Entorno de desarrollo
+* _TestNet_: Entorno de testing
+* _MainNet_: Entorno de producción
+====
+
+=== Solidity
 
 === Creando un Smart Contract con Truffle
