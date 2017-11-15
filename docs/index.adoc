@@ -17,6 +17,7 @@
 :table-caption: Tabla
 :figure-caption: Figura
 :imagesdir: images
+:source-highlighter: pygments
 
 = Desarrollo de DApps con Ethereum
 
