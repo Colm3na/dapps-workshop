@@ -10,6 +10,7 @@
 :toc:
 :toc-title: Índice
 :toc-position: left
+:toclevels: 3
 :nofooter:
 :header:
 :icons: font
