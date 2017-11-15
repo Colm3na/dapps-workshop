@@ -319,6 +319,24 @@ realizar una transacción generará una clave privada y a partir de ésta obtend
 su clave pública correspondiente. La dirección de la cuenta de usuario se
 obtiene a partir de un _hash_ de la clave pública.
 
+==== Gas
+
+El *_gas_* es la unidad de medida de la computación requerida para cada
+instrucción en la EVM. Al realizar una transacción es necesario especificar
+la cantidad máxima de _gas_ que estamos dispuestos a pagar. Si la cantidad de
+_gas_ consumida es menor o igual que este límite, la transacción será minada
+correctamente, en caso contrario sería abortada y sus cambios revertidos.
+
+NOTE: Aunque una transacción sea abortada por haber llegado al límite de _gas_
+especificado, el minero se llevará su parte ya que la computación se ha llevado
+a cabo y han consumido recursos.
+
+Otro valor a especificar en una transacción es la cantidad de ethers que
+queremos pagar por cada unidad de _gas_. Cuánto más alto sea el precio, más
+probable será que un minero acepte la transacción y sea minada antes.
+Transacciones con precios bajos tardarán más en ser minadas o incluso pueden no
+ser minadas.
+
 ==== Transacciones
 
 Una *transacción* es un dato que una dirección envía a otra y ha sido firmado
@@ -341,6 +359,29 @@ el gas total a pagar.
 * *`v`, `r` y `s`*: Parámetros que definen la firma digital. A partir de ellos
 se puede obtener la clave pública y por lo tanto la dirección de la cuenta (por
 eso la dirección de origen no aparece en la transacción).
+
+==== Ethereum Virtual Machine (EVM)
+
+EVM es el entorno donde se ejecuta el _byte-code_ de Ethereum. Cada nodo de la
+red ejecuta una instancia de la EVM. Todos los nodos ejecutan todas las
+transacciones que se realizan a un Smart Contract utilizando la EVM, por lo que
+todos los nodos ejecutan exactamente los mismos cálculos y almacenan los mismos
+valores.
+
+NOTE: Las transacciones que no ejecutan código de un Smart Contract también
+requiren ser procesadas para comprobar que el balance de la cuenta ordenante
+es suficiente.
+
+Esta redundancia es útil ya que permite a cualquier nodo almacenar los
+resultados de las ejecuciones de los Smart Contracts para así tener el valor
+y almacenarlo.
+
+Cada transacción requiere capacidad de computación y almacenamiento por lo que
+estas transacciones deben de tener un coste, de lo contrario cualquiera podría
+inundar la red. Además, si las transacciones fuesen gratis, los mineros no
+tendrían incentivo para incluir las transacciones en los bloques y minarían
+bloques vacíos. Como cada transacción require una cantidad diferente de
+computación también consumirar una cantidad diferente de _gas_.
 
 ==== Forks
 
