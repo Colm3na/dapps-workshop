@@ -341,3 +341,23 @@ el gas total a pagar.
 * *`v`, `r` y `s`*: Parámetros que definen la firma digital. A partir de ellos
 se puede obtener la clave pública y por lo tanto la dirección de la cuenta (por
 eso la dirección de origen no aparece en la transacción).
+
+==== Forks
+
+Los *_forks_* son situaciones que ocurren en una blockchain cuando se produce un
+conflicto entre diferentes nodos sobre cuál es la blockchain legítima. Cuando
+se produce un _fork_ parte de los mineros minarán una blockchain y otra parte
+minará otra. Existen tres tipos de _forks_:
+
+* *Forks ordinarios*: Ocurren de forma natural el la blockchain cuando dos
+mineros minan un bloque casi al mismo tiempo. En el caso de Ethereum existe un
+sistema para tratar estos bloques conocidos como *_uncles_*.
+* *_Soft forks_*: Ocurre cuando se producen cambios en el código fuente que
+requiere que más del 50% de la capacidad computacional de la red los apoyen.
+Por ejemplo, un _soft fork_ se produce cuando se modifica el código para que
+anule una serie de bloques o transacciones. Basta con que la mayoría de los
+mineros apliquen el cambio para que la otra parte los acepte.
+* *_Hard fork_*: Ocurre cuando se producen cambios en el código fuente que
+requiere que *toda la red* los acepten. Un _hard fork_ se produce cuando se
+cambia la estructura del bloque o se cambia la recompensa que se ofrece a los
+mineros.
