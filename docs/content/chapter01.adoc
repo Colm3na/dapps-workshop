@@ -32,7 +32,7 @@ como pasarla para interactuar con la red y proporcionar una API que otras
 aplicaciones consuman.
 
 .Cliente de la DApp
-[width=50%, align="center"]
+[.text-center, width=50%]
 image::figure01.png[Figura 1]
 
 NOTE: Los clientes de las DApps deben ser _open source_ y su código debe ser
@@ -166,7 +166,7 @@ Es adecuada para almacenar de forma creciente datos ordenados en el tiempo y
 sin posibilidad de modificación ni revisión.
 
 .Blockchain
-[align="center"]
+[.text-center]
 image::figure02.jpg[Figura 2]
 
 Un bloque contiene información referente a los datos que se han almacenado
@@ -251,7 +251,7 @@ complicado para generar una cadena de bloques falsa.
 
 === Ethereum
 
-[width="10%", align="center"]
+[.text-center, width="10%"]
 image::figure03.png[Figura 03]
 
 *Ethereum* es una plataforma descentralizada (al igual que Bitcoin), pero su
