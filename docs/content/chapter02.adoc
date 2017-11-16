@@ -1,4 +1,4 @@
-== Smart Contracts
+== Backend
 
 === Geth
 
@@ -30,16 +30,20 @@ Podemos ejecutar Geth usando Docker con el siguiente comando:
 .Ejecutar geth con Docker
 [source, bash]
 ----
-docker run -it -p 30303:30303 ethereum/client-go
+docker run -it -p 30303:30303 ethereum/client-go --syncmode=fast
 ----
 
-Una vez se esté ejecutando geth, comenzará a descargar la blockchain de
+Geth usará los llamados `bootnodes` para descubrir nodos en la red. Estos nodos
+son especiales ya que sólo se encargan de compartir otros nodos y no de
+almacenar la cadena. Al poco de iniciar comenzará a descargar la blockchain de
 Ethereum al completo, lo cual es un proceso largo y requiere varios gigabytes
 disponibles para almacenar toda la cadena. Además, desplegar un contrato e
 interactuar con ellos requiere disponer con una cuenta con ethers para poder
 pagar a los mineros.
 
-==== Crear red privada para desarrollo
+NOTE: Usando el parámetro `--syncmode=fast` no se computan los estados de la
+blockchain sino que ya se descargan computados, lo que hace que sea más rápida
+la sincronización.
 
 Afortunadamente existen varias redes de Ethereum actualmente además de la red
 principal (_main net_). Estas redes alternativas conocidas como _test nets_
@@ -50,19 +54,108 @@ más conocidas son:
 * Kovan
 * Rinkeby
 
-También existe la posibilidad de crear nuestra propia red privada de Ethereum en
-la que nosotros seamos el único nodo. Si usamos este método debemos tener en
-cuenta que necesitamos minar para que la red funcione. Ejecutar geth con el
-parámetro `--mine` bastaría.
-
+.Usar Geth con Ropsten
 ====
-Haciendo una analogía con un sistema de integración continua tendríamos:
+Para conectarnos a una red testing tenemos que indicarle a geth otros
+`bootnodes` manualmente:
 
-* Red privada: Entorno de desarrollo
-* _TestNet_: Entorno de testing
-* _MainNet_: Entorno de producción
+[source, bash]
+----
+docker run --rm -it ethereum/client-go --testnet --syncmode=fast --bootnodes "enode://20c9ad97c081d63397d7b685a412227a40e23c8bdc6688c6f37e97cfbc22d2b4d1db1510d8f61e6a8866ad7f0e17c02b14182d37ea7c3c8b9c2683aeb6b733a1@52.169.14.227:30303,enode://6ce05930c72abc632c58e2e4324f7c7ea478cec0ed4fa2528982cf34483094e9cbc9216e7aa349691242576d552a2a56aaeae426c5303ded677ce455ba1acd9d@13.84.180.240:30303"
+----
 ====
 
-=== Solidity
+==== Puppeth
 
-=== Creando un Smart Contract con Truffle
+También existe la posibilidad de crear nuestra propia red privada de Ethereum.
+*Puppeth* es una utilidad que nos ayuda a crear nuestras propias redes privadas.
+
+****
+Haciendo una analogía con un sistema de *integración continua* tendríamos:
+
+* *Red privada*: Entorno de desarrollo
+* *_TestNet_*: Entorno de testing
+* *_MainNet_*: Entorno de producción
+****
+
+Lo primero es generar el bloque génesis de la red, que es
+donde se define un estado inicial de la red, por ejemplo, pueden existir
+cuentas con ethers desde el primer momento. Puppeth es un CLI que podemos
+encontrar en las imágenes de docker etiquetadas como `alltools`.
+
+NOTE: Para crear una red privada puede no ser conveniente usar _proof-of-work_
+como protocolo de concenso ya que consume muchos recursos. Como alternativa
+tenemos el _proof-of-authority_ que se basa en que sólo unas direcciones
+especificadas en el bloque génesis tienen permisos para crear bloques.
+
+El primer paso es generar una dirección de la siguiente forma:
+
+.Generar una dirección
+[source, bash]
+----
+mkdir workshop; cd workshop
+docker run --rm -it -v $(pwd):/data ethereum/client-go:alltools-latest geth account new
+----
+
+Una vez introducida la contraseña, nos generará la dirección que se mostrará
+por pantalla. Ahora ejecutaremos puppeth:
+
+CAUTION: Como se puede ver, hemos creado la cuenta antes de inicializar la
+blockchain. Esto es porque una cuenta no es más que un par de claves pública y
+privada, por lo que a una dirección le corresponde una clave privada
+independientemente de la blockchain. *No es recomendable usar en la blockchain
+principal direcciones que ya hayamos usado en redes privadas o de testing*.
+
+.Ejecutar puppeth
+[source, bash]
+----
+docker run --rm -it -v $(pwd):/data ethereum/client-go:alltools-latest puppeth
+----
+
+Puppeth nos pedirá un nombre para nuestra red privada, podemos poner cualquier
+cosa, por ejemplo "_workshop_". A continuación mostrará un menú donde tenemos
+que elegir la opción `2. Configure new genesis`. Seguiremos los
+siguientes pasos:
+
+. Which consensus engine to use?: `2. Clique - proof-of-authority`
+. How many seconds should blocks take?: `2`
+. Which accounts are allowed to seal?: Aquí introducimos la dirección que
+generamos antes.
+. Which accounts should be pre-funded?: Aquí también introducimos la dirección
+que generamos antes.
+. Specify your chain/network ID if you want an explicit one: `random`
+. Anything fun to embed into the genesis block?: ``
+
+Una vez generado, volveremos al menú y seleccionaremos la opción
+`2. Manage existing genesis`. Y luego `2. Export genesis configuration`. En
+el nombre del fichero introduciremos: `/data/workshop.json` y ya tendremos
+nuestro bloque génesis generado.
+
+.Inicializar una blockchain usando el bloque génesis generado
+[source, bash]
+----
+docker run --rm -it -v $(pwd):/data ethereum/client-go:alltools-latest geth --datadir /data init /data/workshop.json
+----
+
+Ahora podemos iniciar un nodo en nuestra red privada:
+
+.Iniciar un nodo en la blockchain privada
+[source, bash]
+----
+docker run --rm -it -v (pwd):/data -p 8545:8545 ethereum/client-go:alltools-latest geth --networkid 39475 --rpc --rpcaddr 0.0.0.0 --datadir /data console
+----
+
+NOTE: El `networkid` si lo generamos aleatoriamente podemos encontrarlo en el
+fichero `workshop.json`.
+
+Una vez veamos la consola, procedemos a desbloquear la cuenta autorizada y
+comenzar a minar:
+
+.Comenzar proceso de minado
+[source, javascript]
+----
+personal.unlockAccount("0x39091b5f009f21b0dead7320d9487842b0655e12", "password", 0)
+miner.start()
+----
+
+=== Smart Contracts

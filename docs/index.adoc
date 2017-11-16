@@ -15,6 +15,7 @@
 :header:
 :icons: font
 :table-caption: Tabla
+:example-caption: Ejemplo
 :figure-caption: Figura
 :imagesdir: images
 :source-highlighter: pygments
