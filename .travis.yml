@@ -1,13 +1,21 @@
 sudo: required
 
+language: node_js
+node_js:
+  - "node"
+
 services:
   - docker
 
-before_install:
-  - mkdir -p output
-  - docker pull asciidoctor/docker-asciidoctor
+install:
+  - cd $TRAVIS_BUILD_DIR/truffle; npm install
 
 script:
+  - cd $TRAVIS_BUILD_DIR/truffle; npm test
+
+before_deploy:
+  - mkdir -p output
+  - docker pull asciidoctor/docker-asciidoctor
   - mkdir -p $TRAVIS_BUILD_DIR/docs/output/images
   - cp $TRAVIS_BUILD_DIR/docs/images/* $TRAVIS_BUILD_DIR/docs/output/images/
   - docker run -it -v $TRAVIS_BUILD_DIR/docs:/documents/ asciidoctor/docker-asciidoctor asciidoctor -a "stylesheet=foundation.css" -D output/ "*.adoc"
@@ -18,4 +26,4 @@ deploy:
   github_token: $GITHUB_TOKEN
   on:
     branch: master
-  local_dir: docs/output
+  local_dir: $TRAVIS_BUILD_DIR/docs/output
