@@ -9,7 +9,7 @@ contract Booking {
 
     struct Room {
         uint8 capacity;
-        Slot[6] slots;
+        Slot[10] slots;
     }
 
     struct Slot {
@@ -104,14 +104,21 @@ contract Booking {
         rooms[roomId].capacity = capacity;
     }
 
-    function getRoom(uint32 roomId) public view
-        returns (uint8 capacity, bool[6] enabled, bytes32[6] data)
+    function getRoom(uint32 roomId, uint32 timestamp) public view
+        returns (uint8 capacity, uint8[10] status, bytes32[10] data)
     {
-        Room memory room = rooms[roomId];
+        Room storage room = rooms[roomId];
         capacity = room.capacity;
-        for (uint i = 0; i < 6; i++) {
-            Slot memory slot = room.slots[i];
-            enabled[i] = slot.enabled;
+        for (uint i = 0; i < room.slots.length; i++) {
+            Slot storage slot = room.slots[i];
+            if (!slot.enabled) {
+                status[i] = 0;
+                continue;
+            }
+
+            Reservation memory reservation =
+                slot.reservations[getDay(timestamp)];
+            status[i] = reservation.owner == address(0) ? 1 : 2;
             data[i] = slot.data;
         }
 
@@ -123,14 +130,15 @@ contract Booking {
      * like "9:00 - 11:00".
      *
      * @param   roomId  ID of the room
-     * @param   order   Time slot of the room
      * @param   data    Data to store
      */
-    function setSlot(uint32 roomId, uint8 order, bytes32 data) public noEmptyRoom(roomId) onlyOwner {
-        require(order < 6);
+    function setSlot(uint32 roomId, uint8 slot, bytes32 data) public
+        noEmptyRoom(roomId) onlyOwner
+    {
+        require(slot < 10);
 
-        rooms[roomId].slots[order].enabled = true;
-        rooms[roomId].slots[order].data = data;
+        rooms[roomId].slots[slot].enabled = true;
+        rooms[roomId].slots[slot].data = data;
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -142,31 +150,8 @@ contract Booking {
      *
      * @return  List of rooms IDs
      */
-    function listRoomsIds() public view returns (uint32[]) {
+    function listRooms() public view returns (uint32[]) {
         return roomIds;
-    }
-
-    /**
-     * Checks if a room is available for a given slot and day.
-     *
-     * @param   roomId  Room ID
-     * @param   slotId  Slot
-     * @param   timestamp     Day computed by dividing unix timestamp by 86400
-     * @return          True if available, false if booked.
-     */
-    function checkAvailability(
-        uint32 roomId,
-        uint8 slotId,
-        uint32 timestamp
-    ) public view noEmptyRoom(roomId) returns (bool) {
-        Slot storage slot = rooms[roomId].slots[slotId];
-        if (!slot.enabled) {
-            return false;
-        }
-
-        Reservation memory reservation = slot.reservations[getDay(timestamp)];
-
-        return reservation.owner == address(0);
     }
 
     /**
@@ -177,7 +162,9 @@ contract Booking {
      * @param   slotId  Slot
      * @param   timestamp     Day computed by dividing unix timestamp by 86400
      */
-    function book(uint32 roomId, uint8 slotId, uint32 timestamp) public noEmptyRoom(roomId) {
+    function book(uint32 roomId, uint8 slotId, uint32 timestamp) public
+        noEmptyRoom(roomId)
+    {
         uint32 day = getDay(timestamp);
         uint32 currentDay = getCurrentDay();
         require(day >= currentDay && day <= currentDay + maxDays);
