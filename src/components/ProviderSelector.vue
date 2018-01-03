@@ -1,7 +1,7 @@
 <template>
 <div>
   <q-select v-model="accountSelect" :options="options" @change="selectProvider" stack-label="Account"
-    separator inverted color="negative" />
+    separator inverted color="secondary" />
 
   <q-modal ref="basicModal">
     <add-account v-on:done="newAccount" />

@@ -1,5 +1,5 @@
-const Booking = artifacts.require('./Booking.sol')
+const Booking = artifacts.require('./Booking.sol');
 
 module.exports = deployer => {
-  deployer.deploy(Booking, 2)
-}
+  deployer.deploy(Booking, 2);
+};
