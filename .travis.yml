@@ -8,13 +8,16 @@ services:
   - docker
 
 install:
-  - cd $TRAVIS_BUILD_DIR/truffle; npm install
+  - npm install
+  - docker pull trufflesuite/ganache-cli:latest
+
+before_script:
+  - docker run -d -p 8545:8545 trufflesuite/ganache-cli:latest
 
 script:
-  - cd $TRAVIS_BUILD_DIR/truffle; npm test
+  - npm test
 
 before_deploy:
-  - mkdir -p output
   - docker pull asciidoctor/docker-asciidoctor
   - mkdir -p $TRAVIS_BUILD_DIR/docs/output/images
   - cp $TRAVIS_BUILD_DIR/docs/images/* $TRAVIS_BUILD_DIR/docs/output/images/
