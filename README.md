@@ -6,4 +6,4 @@
 # Workshop de desarrollo de DApps
 
 En este repositorio puede encontrarse el código y la documentación para
-la realización del _workshop_ preparado para el desarrollo de DApps.
+la realización del _workshop_ preparado para el desarrollo de **DApps**.
