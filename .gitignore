@@ -1,3 +1,4 @@
 docs/output
 node_modules/
-output/
+build/contracts/
+dist/
