@@ -1,9 +1,0 @@
-{
-  "extends": "default",
-  "rules": {
-    "separate-by-one-line-in-contract": false,
-    "not-rely-on-time": false,
-    "compiler-fixed": false,
-    "no-complex-fallback": false
-  }
-}
