@@ -158,4 +158,147 @@ personal.unlockAccount("0x39091b5f009f21b0dead7320d9487842b0655e12", "password",
 miner.start()
 ----
 
-=== Smart Contracts
+=== Ganache
+
+Como crear una red privada es un proceso relativamente complejo, existe una
+utilidad que nos permite simular una red con el propósito de desarrollar.
+
+NOTE: Anteriormente, `ganache` era conocida como `testrpc`.
+
+Para instalar `ganache` ejecutamos el siguiente comando:
+
+.Instalar ganache-cli
+[source, bash]
+----
+npm install -g ganache-cli
+----
+
+Para iniciar una red simplemente ejecutamos el siguiente comando:
+
+.Iniciar red de pruebas
+[source, bash]
+----
+ganache-cli
+----
+
+También podemos pasarle una clave privada y una cantidad de ethers para que
+`ganache` genere la cuenta automáticamente:
+
+.Iniciar red de pruebas con una cuenta específica
+[source, bash]
+----
+ganache-cli --account="0x54f773ff404a530d7426daf071c098617eb34d54dbe1a198354049125243948a,10000000000000000000"
+----
+
+`ganache-cli` es la versión para consola, también podemos usar `ganache` que
+tiene una interfaz gráfica. Podemos descargarlo desde
+link:http://truffleframework.com/ganache/[http://truffleframework.com/ganache/].
+
+Esta herramienta se comporta como un cliente de Ethereum (como `geth`) ofreciendo
+la misma API, pero funciona de forma más rápida ya que no hay que esperar los
+15 segundos, los bloques se minan instantáneamente y, por supuesto, sin
+ningún coste.
+
+=== Truffle
+
+Truffle es un framework que nos permite automatizar ciertas tareas de desarrollo.
+Para crear un nuevo proyecto en Truffle ejecutamos lo siguiente:
+
+.Crear un nuevo proyecto con Truffle
+[source, bash]
+----
+mkdir workshop
+cd workshop
+truffle init
+----
+
+Tendremos la siguiente estructura dentro de nuestro directorio `workshop`:
+
+[source]
+----
+├── build
+│   └── contracts
+│       └── Migrations.json
+├── contracts
+│   └── Migrations.sol
+├── migrations
+│   └── 1_initial_migration.js
+├── test
+├── truffle-config.js
+└── truffle.js
+----
+
+* *build*: Contiene la ABI de los contratos. La ABI se almacena en un fichero
+con formato JSON. Usaremos la ABI contiene la información para interactuar
+con nuestro contrato.
+* *contracts*: Contiene el código fuente de los contratos que vamos a
+desarrollar.
+* *migrations*: Contiene las migraciones. Las migraciones son scripts que se
+ejecutan cuando actualizamos nuestro contratos.
+* *test*: Contiene los tests para nuestros contratos.
+* *truffle-config.js / truffle.js*: Contiene la configuración para el
+despligue de los contratos.
+
+Para compilar un contrato (generar su ABI) ejecutamos:
+
+.Compilar un Smart Contract
+[source, bash]
+----
+truffle compile
+----
+
+Para desplegar un Smart Contract:
+
+.Desplegar un Smart Contract
+[source, bash]
+----
+truffle migrate
+----
+
+NOTE: Para que funcione el despliegue de un Smart Contract debemos tener
+`ganache-cli` funcionando mientras realizamos el despliegue.
+
+==== Infura
+
+Para desplegar a una testnet en lugar de desplegar a ganache necesitamos uno
+nodo que esté conectado a la testnet en cuestión y *esté sincronizado*. Una
+forma de evitar tener que correr un nodo conectado a las testnet es usar
+link:https://infura.io/[Infura]. Con Infura disponemos de un nodo público que
+nos da acceso a diferentes redes de Ethereum.
+
+Para usar infura con truffle añadiremos los siguiente al fichero `truffle.js`:
+
+.`truffle.js`
+[source, javascript]
+----
+require('dotenv').config();
+const Wallet = require('ethereumjs-wallet');
+const WalletProvider = require('truffle-wallet-provider');
+const Web3 = require('web3');
+
+const web3 = new Web3();
+
+var privateKey = new Buffer('<my private key>', 'hex');
+
+module.exports = {
+  networks: {
+    ropsten: {
+      provider: new WalletProvider(
+        Wallet.fromPrivateKey(ropstenPrivateKey),
+        'https://ropsten.infura.io/',
+      ),
+      gas: 4600000,
+      gasPrice: web3.toWei('20', 'gwei'),
+      network_id: '3',
+    },
+  },
+};
+----
+
+Debemos instalar los siguientes paquetes:
+
+.Instalación de paquetes adicional
+[source, bash]
+----
+npm install --save dotenv truffle-wallet-provider
+----
