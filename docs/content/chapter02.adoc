@@ -94,7 +94,7 @@ El primer paso es generar una dirección de la siguiente forma:
 [source, bash]
 ----
 mkdir workshop; cd workshop
-docker run --rm -it -v $(pwd):/data ethereum/client-go:alltools-latest geth account new
+docker run --rm -it -v $(pwd):/root/.ethereum/keystore ethereum/client-go:alltools-latest geth account new
 ----
 
 Una vez introducida la contraseña, nos generará la dirección que se mostrará
