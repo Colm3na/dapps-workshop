@@ -1,27 +1,16 @@
 sudo: required
 
-language: node_js
-node_js:
-  - "node"
-
 services:
   - docker
 
-install:
-  - npm install
-  - docker pull trufflesuite/ganache-cli:latest
-
-before_script:
-  - docker run -d -p 8545:8545 trufflesuite/ganache-cli:latest
+before_install:
+  - mkdir -p output
+  - docker pull asciidoctor/docker-asciidoctor
 
 script:
-  - npm test
-
-before_deploy:
-  - docker pull asciidoctor/docker-asciidoctor
   - mkdir -p $TRAVIS_BUILD_DIR/docs/output/images
   - cp $TRAVIS_BUILD_DIR/docs/images/* $TRAVIS_BUILD_DIR/docs/output/images/
-  - docker run -it -v $TRAVIS_BUILD_DIR/docs:/documents/ asciidoctor/docker-asciidoctor asciidoctor -a "stylesheet=foundation.css" -D output/ "*.adoc"
+  - docker run -it -v $TRAVIS_BUILD_DIR/docs:/documents/ asciidoctor/docker-asciidoctor asciidoctor -D output/ "*.adoc"
 
 deploy:
   provider: pages
@@ -29,4 +18,4 @@ deploy:
   github_token: $GITHUB_TOKEN
   on:
     branch: master
-  local_dir: $TRAVIS_BUILD_DIR/docs/output
+  local_dir: docs/output
