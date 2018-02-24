@@ -94,7 +94,7 @@ El primer paso es generar una dirección de la siguiente forma:
 [source, bash]
 ----
 mkdir workshop; cd workshop
-docker run --rm -it -v $(pwd):/root/.ethereum/keystore ethereum/client-go:alltools-latest geth account new
+docker run --rm -it -v $(pwd):/data ethereum/client-go:alltools-latest geth --datadir /data account new
 ----
 
 Una vez introducida la contraseña, nos generará la dirección que se mostrará
@@ -142,7 +142,7 @@ Ahora podemos iniciar un nodo en nuestra red privada:
 .Iniciar un nodo en la blockchain privada
 [source, bash]
 ----
-docker run --rm -it -v (pwd):/data -p 8545:8545 ethereum/client-go:alltools-latest geth --networkid 39475 --rpc --rpcaddr 0.0.0.0 --datadir /data console
+docker run --rm -it -v $(pwd):/data -p 8545:8545 ethereum/client-go:alltools-latest geth --networkid 39475 --rpc --rpcaddr 0.0.0.0 --datadir /data console
 ----
 
 NOTE: El `networkid` si lo generamos aleatoriamente podemos encontrarlo en el
@@ -156,6 +156,19 @@ comenzar a minar:
 ----
 personal.unlockAccount("0x39091b5f009f21b0dead7320d9487842b0655e12", "password", 0)
 miner.start()
+----
+
+.Contrato Hello World
+[source, solidity]
+----
+pragma solidity ^0.4.11;
+
+
+contract HelloWorld {
+    function helloWorld () public pure returns (string) {
+        return "Mi primer contrato en Solidity";
+    }
+}
 ----
 
 === Ganache
@@ -271,7 +284,6 @@ Para usar infura con truffle añadiremos los siguiente al fichero `truffle.js`:
 .`truffle.js`
 [source, javascript]
 ----
-require('dotenv').config();
 const Wallet = require('ethereumjs-wallet');
 const WalletProvider = require('truffle-wallet-provider');
 const Web3 = require('web3');
@@ -284,12 +296,17 @@ module.exports = {
   networks: {
     ropsten: {
       provider: new WalletProvider(
-        Wallet.fromPrivateKey(ropstenPrivateKey),
+        Wallet.fromPrivateKey(privateKey),
         'https://ropsten.infura.io/',
       ),
       gas: 4600000,
       gasPrice: web3.toWei('20', 'gwei'),
       network_id: '3',
+    },
+    development: {
+      host: '127.0.0.1',
+      port: 8545,
+      network_id: '*',
     },
   },
 };
@@ -301,4 +318,12 @@ Debemos instalar los siguientes paquetes:
 [source, bash]
 ----
 npm install --save dotenv truffle-wallet-provider
+----
+
+Y para desplegar un contrato en Ropsten ejecutamos:
+
+.Desplegar un Smart Contract
+[source, bash]
+----
+truffle migrate --network ropsten
 ----
