@@ -1,4 +1,4 @@
-== Backend
+== Smart Contracts
 
 === Geth
 
@@ -158,23 +158,16 @@ personal.unlockAccount("0x39091b5f009f21b0dead7320d9487842b0655e12", "password",
 miner.start()
 ----
 
-.Contrato Hello World
-[source, solidity]
-----
-pragma solidity ^0.4.11;
-
-
-contract HelloWorld {
-    function helloWorld () public pure returns (string) {
-        return "Mi primer contrato en Solidity";
-    }
-}
-----
-
 === Ganache
 
-Como crear una red privada es un proceso relativamente complejo, existe una
-utilidad que nos permite simular una red con el propósito de desarrollar.
+Crear una red privada es un proceso relativamente complejo, por ello existe una
+utilidad que nos permite simular una red privada sólo para tests y depuración de
+contratos: *Ganache*.
+
+Esta herramienta se comporta como un cliente de Ethereum (como `geth`) ofreciendo
+la misma API, pero funciona de forma más rápida ya que no hay que esperar los
+15 segundos, los bloques se minan instantáneamente y, por supuesto, sin
+ningún coste. Su funcinamiento es local y no depende de una conexión a internet.
 
 NOTE: Anteriormente, `ganache` era conocida como `testrpc`.
 
@@ -186,7 +179,7 @@ Para instalar `ganache` ejecutamos el siguiente comando:
 npm install -g ganache-cli
 ----
 
-Para iniciar una red simplemente ejecutamos el siguiente comando:
+Para iniciar la simulación de una red ejecutamos el siguiente comando:
 
 .Iniciar red de pruebas
 [source, bash]
@@ -203,19 +196,19 @@ También podemos pasarle una clave privada y una cantidad de ethers para que
 ganache-cli --account="0x54f773ff404a530d7426daf071c098617eb34d54dbe1a198354049125243948a,10000000000000000000"
 ----
 
+[NOTE]
+====
 `ganache-cli` es la versión para consola, también podemos usar `ganache` que
 tiene una interfaz gráfica. Podemos descargarlo desde
 link:http://truffleframework.com/ganache/[http://truffleframework.com/ganache/].
-
-Esta herramienta se comporta como un cliente de Ethereum (como `geth`) ofreciendo
-la misma API, pero funciona de forma más rápida ya que no hay que esperar los
-15 segundos, los bloques se minan instantáneamente y, por supuesto, sin
-ningún coste.
+====
 
 === Truffle
 
+==== Configuración
+
 Truffle es un framework que nos permite automatizar ciertas tareas de desarrollo.
-Para crear un nuevo proyecto en Truffle ejecutamos lo siguiente:
+Para crear un nuevo proyecto con Truffle ejecutamos lo siguiente:
 
 .Crear un nuevo proyecto con Truffle
 [source, bash]
@@ -227,6 +220,89 @@ truffle init
 
 Tendremos la siguiente estructura dentro de nuestro directorio `workshop`:
 
+* *build*: Contiene la ABI de los contratos. La ABI se almacena en un fichero
+con formato JSON. Usaremos la ABI para interactuar con nuestro contrato.
+* *contracts*: Contiene el código fuente de los contratos que vamos a
+desarrollar.
+* *migrations*: Contiene las migraciones. Las migraciones son scripts que se
+ejecutan cuando actualizamos nuestro contratos.
+* *test*: Contiene los tests para nuestros contratos.
+* *`truffle-config.js` / `truffle.js`*: Contiene la configuración para el
+despligue de los contratos. Podemos borrar `truffle-config.js`.
+
+Creamos un fichero llamado `package.json` que contenga lo siguiente:
+
+.`package.json`
+[source, json]
+----
+{
+  "name": "erc20-example",
+  "version": "1.0.0",
+  "description": "Basic ERC20 Token",
+  "main": "truffle.js",
+  "scripts": {
+    "test": "truffle test",
+    "compile": "truffle compile",
+    "deploy:dev": "truffle migrate --network development",
+    "deploy:test": "truffle migrate --network test"
+  },
+  "dependencies": {
+    "ethereumjs-wallet": "^0.6.0",
+    "truffle-wallet-provider": "0.0.5",
+    "web3": "^1.0.0-beta.30"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.2",
+    "eslint": "^4.18.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-html": "^4.0.2",
+    "eslint-plugin-import": "^2.9.0"
+  }
+}
+----
+
+Por último, el fichero `truffle.js` debe quedar de las siguiente forma:
+
+.`truffle.js`
+[source, javascript]
+----
+const Wallet = require('ethereumjs-wallet');
+const WalletProvider = require('truffle-wallet-provider');
+const Web3 = require('web3');
+
+const PRIVATE_KEY = '';
+const NODE_URL = '';
+
+module.exports = {
+  networks: {
+    development: {
+      host: '127.0.0.1',
+      port: 8545,
+      network_id: '*'
+    },
+    test: {
+      provider: new WalletProvider(
+        Wallet.fromPrivateKey(Buffer.from(PRIVATE_KEY, 'hex')),
+        NODE_URL
+      ),
+      gas: 4600000,
+      gasPrice: Web3.utils.toWei('20', 'gwei'),
+      network_id: '3'
+    }
+  }
+};
+----
+
+Para instalar las dependencias ejecutamos:
+
+.Instalar dependencias
+[source, bash]
+----
+npm install
+----
+
+Deberíamos tener la siguiente estructura de directorios:
+
 [source]
 ----
 ├── build
@@ -236,94 +312,99 @@ Tendremos la siguiente estructura dentro de nuestro directorio `workshop`:
 │   └── Migrations.sol
 ├── migrations
 │   └── 1_initial_migration.js
+├── node_modules
 ├── test
-├── truffle-config.js
+├── package.json
 └── truffle.js
 ----
 
-* *build*: Contiene la ABI de los contratos. La ABI se almacena en un fichero
-con formato JSON. Usaremos la ABI contiene la información para interactuar
-con nuestro contrato.
-* *contracts*: Contiene el código fuente de los contratos que vamos a
-desarrollar.
-* *migrations*: Contiene las migraciones. Las migraciones son scripts que se
-ejecutan cuando actualizamos nuestro contratos.
-* *test*: Contiene los tests para nuestros contratos.
-* *truffle-config.js / truffle.js*: Contiene la configuración para el
-despligue de los contratos.
+==== Compilar contratos
+
+Vamos a crear un nuevo contrato en la carpeta `contracts`. Lo llamaremos
+`HelloWorld.sol` y tendrá el siguiente contenido:
+
+.Contrato Hello World
+[source, solidity]
+----
+pragma solidity ^0.4.11;
+
+
+contract HelloWorld {
+    function greet() public pure returns (string) {
+        return "Mi primer contrato en Solidity";
+    }
+}
+----
 
 Para compilar un contrato (generar su ABI) ejecutamos:
 
 .Compilar un Smart Contract
 [source, bash]
 ----
-truffle compile
+npm run compile
 ----
 
-Para desplegar un Smart Contract:
+Tras compilar un contrato, encontraremos los ficheros compilados dentro del
+directorio `build/contracts`.
+
+==== Crear migraciones
+
+Las migraciones nos ayudan con la actualización de contratos. Al crear un
+proyecto con Truffle, automáticamente se genera un Smart Contract llamado
+`Migrations.sol` que lleva la cuenta de los despliegues que hacemos, de forma
+que no desplegará dos veces el mismo contrato. También se incluye una migración
+llamada `1_initial_migration.js` que se encarga de desplegar el contrato
+`Migrations.sol`.
+
+Cada vez que modificamos un contrato y queremos desplegar una nueva versión,
+debemos crear una nueva migración en el directorio `migrations`.
+
+Para desplegar nuestro contrato `HelloWorld.sol` debemos crear una nueva
+migración en el directorio `migrations`. Debe contener lo siguiente:
+
+.`2_hello_world_deploy.js`
+[source, javascript]
+----
+var HelloWorld = artifacts.require('./HelloWorld.sol');
+
+module.exports = function(deployer) {
+  deployer.deploy(HelloWorld);
+};
+----
+
+==== Desplegar contratos
+
+Desplegar un Smart Contract en nuestra red de desarrollo:
 
 .Desplegar un Smart Contract
 [source, bash]
 ----
-truffle migrate
+npm run deploy:dev
 ----
 
 NOTE: Para que funcione el despliegue de un Smart Contract debemos tener
 `ganache-cli` funcionando mientras realizamos el despliegue.
 
-==== Infura
+Para desplegar en una testnet, necesitamos un nodo que esté conectado a la ella
+y *esté sincronizado*. Una forma de evitar disponer de un nodo sincronizado (que
+puede tardar horas) es usar link:https://infura.io/[Infura]. Con Infura
+disponemos nodos públicos que nos dan acceso a diferentes redes de Ethereum,
+como la red principal o las testnets.
 
-Para desplegar a una testnet en lugar de desplegar a ganache necesitamos uno
-nodo que esté conectado a la testnet en cuestión y *esté sincronizado*. Una
-forma de evitar tener que correr un nodo conectado a las testnet es usar
-link:https://infura.io/[Infura]. Con Infura disponemos de un nodo público que
-nos da acceso a diferentes redes de Ethereum.
-
-Para usar infura con truffle añadiremos los siguiente al fichero `truffle.js`:
+Para usar Infura con truffle, editamos el fichero `truffle.js` y modificamos la
+variable `NODE_URL`:
 
 .`truffle.js`
 [source, javascript]
 ----
-const Wallet = require('ethereumjs-wallet');
-const WalletProvider = require('truffle-wallet-provider');
-const Web3 = require('web3');
-
-const web3 = new Web3();
-
-var privateKey = new Buffer('<my private key>', 'hex');
-
-module.exports = {
-  networks: {
-    ropsten: {
-      provider: new WalletProvider(
-        Wallet.fromPrivateKey(privateKey),
-        'https://ropsten.infura.io/',
-      ),
-      gas: 4600000,
-      gasPrice: web3.toWei('20', 'gwei'),
-      network_id: '3',
-    },
-    development: {
-      host: '127.0.0.1',
-      port: 8545,
-      network_id: '*',
-    },
-  },
-};
+const NODE_URL = 'https://ropsten.infura.io';
 ----
 
-Debemos instalar los siguientes paquetes:
-
-.Instalación de paquetes adicional
-[source, bash]
-----
-npm install --save dotenv truffle-wallet-provider
-----
-
-Y para desplegar un contrato en Ropsten ejecutamos:
+De esta forma usaremos un nodo de Infura para desplegar contratos en la red
+Ropsten. Para iniciar el despliegue ejecutamos:
 
 .Desplegar un Smart Contract
 [source, bash]
 ----
-truffle migrate --network ropsten
+npm run deploy:test
 ----
