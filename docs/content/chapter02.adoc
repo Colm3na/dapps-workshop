@@ -203,6 +203,37 @@ tiene una interfaz gráfica. Podemos descargarlo desde
 link:http://truffleframework.com/ganache/[http://truffleframework.com/ganache/].
 ====
 
+=== Infura
+
+Además de desplegar nuestro propio nodo, existen nodos públicos a los que
+podemos conectarnos. Los nodos públicos están fuera de nuestro control, aunque
+muchas veces son convenientes porque nos ahorra tener un equipo en
+constante sincronización.
+
+Infura provee de una serie de nodos públicos a los que podemos conectarnos.
+Cuando usamos Metamask, realmente estamos usando un nodo de Infura, aunque
+podemos configurar Metamask para que use el nodo que queramos.
+
+.Diagrama de Infura
+[.text-center, width=100%]
+image::figure05.png[]
+
+Cuando usamos un nodo, podemos tener nuestras cuentas (claves privadas)
+almacenadas en el propio nodo. En el caso de los nodos públicos, esta
+funcionalidad está desactivada, puesto que no tendría sentido que los usuarios
+de los nodos públicos almacenasen su clave privada en ellos.
+
+A la hora de firmar transacciones debemos hacerlo de forma local y, una vez
+firmadas, podemos usar el nodo público para enviarla a la red.
+
+[CAUTION]
+====
+Hay que tener muchísimo cuidado si tenemos un nodo funcionando, puesto que este
+nodo no debería exponer nunca el puerto donde se encuentra escuchando la API.
+Si algún atacante tiene acceso a nuestro nodo puede intentar robarnos ether en
+el momento de desbloquear la cuenta.
+====
+
 === Truffle
 
 ==== Configuración
@@ -213,8 +244,8 @@ Para crear un nuevo proyecto con Truffle ejecutamos lo siguiente:
 .Crear un nuevo proyecto con Truffle
 [source, bash]
 ----
-mkdir workshop
-cd workshop
+mkdir -p workshop/truffle
+cd workshop/truffle
 truffle init
 ----
 
