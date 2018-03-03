@@ -1,7 +1,92 @@
 == Frontend
 
-=== Web3.js
+Una vez tenemos un contrato desplegado en una red, el siguiente paso es realizar
+una interfaz gráfica para el mismo. Se puede hacer todo tipo de interfaces,
+sin embargo, en esta guía veremos como hacer una interfaz web.
 
-=== Metamask
+=== web3.js
 
-=== Vue.js
+link:http://web3js.readthedocs.io/en/1.0/index.html#[web3.js] se trata de una
+librería para JavaScript que nos permite interactuar
+con los contratos desplegados. Con esta librería podemos conectarnos a un nodo
+de Ethereum y usar la JSON-RPC.
+
+Existen dos posibilidades para conectarnos a un nodo:
+
+* *Conexión directa*: Se realiza una conexión a un nodo del cual conocemos su
+dirección IP. Es recomendable permitir la elección del nodo al cual
+conectarse, ya que esta decisión corresponde al usuario de la aplicación y no
+al desarrollador.
+* *Navegador compatible con web3*: Podemos usar el nodo configurado en el propio
+navegador por el usuario. Para ello, el navegador debe ser compatible con web3,
+por ejemplo link:https://github.com/ethereum/mist[Mist] es un navegador
+compatible. También podemos usar Metamask si usamos Firefox o Chrome.
+
+Una DApp puede elegir usar uno de los dos métodos o los dos. La forma
+recomendada es mediante un navegador compatible con web3, ya que permite al
+elegir el nodo de forma global para todas las DApps.
+
+.Modos de conexión
+[.text-center, width=75%]
+image::figure04.png[]
+
+[NOTE]
+====
+Actualmente existen dos versiones de web3.js. La versión actual y la beta
+de la versión 1.0. *En esta guía se usará la versión 1.0 beta*.
+====
+
+=== Creación de proyecto
+
+Usaremos Vue.js como framework para desarrollar nuestra interfaz web. Para
+crear nuestro proyecto, usaremos `vue-cli`.
+
+[NOTE]
+====
+En esta guía no veremos cómo funciona Vue.js, aunque lo usaremos durante toda
+la sección de frontend. Puesto que el proyecto de ejemplo es bastante simple no
+es necesario tener mucho conocimiento sobre el framework. Se ha elegido Vue.js
+por su simplicidad y por ser fácil de aprender.
+====
+
+Primero debemos instalar `vue-cli`:
+
+.Instalar `vue-cli`
+[source, bash]
+----
+npm install -g vue-cli
+----
+
+Una vez instalado, entramos en la carpeta creada anteriormente e iniciamos el
+proyecto:
+
+.Crear proyecto con Vue.js
+[source, bash]
+----
+cd workshop
+vue init webpack erc20-webui
+----
+
+El comando anterior pedirá una serie de parámetros que podemos rellenar de la
+siguiente forma:
+
+.Configuración con `vue-cli`
+****
+? *Project name* `webui`
+
+? *Project description* `ERC20 Token WebUI`
+
+? *Author* `Tu nombre aquí`
+
+? *Vue build* `standalone`
+
+? *Install vue-router?* `No`
+
+? *Use ESLint to lint your code?* `No`
+
+? *Set up unit tests* `No`
+
+? *Setup e2e tests with Nightwatch?* `No`
+
+? *Should we run `npm install` for you after the project has been created? (recommended)* `npm`
+****
