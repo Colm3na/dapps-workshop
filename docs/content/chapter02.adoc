@@ -439,3 +439,28 @@ Ropsten. Para iniciar el despliegue ejecutamos:
 ----
 npm run deploy:test
 ----
+
+=== Tokens ERC20
+
+ERC20 es un estándar que permite desarrollar tokens de Ethereum con una interfaz
+común. Esto permite que sean compatibles con multitud de aplicaciones. La
+interfaz se define de la siguiente forma:
+
+.`erc20.sol`
+[source, solidity]
+----
+contract ERC20Basic {
+    event Transfer(address indexed from, address indexed to, uint256 value);
+
+    function totalSupply() public view returns (uint256);
+    function balanceOf(address who) public view returns (uint256);
+    function transfer(address to, uint256 value) public returns (bool);
+}
+----
+
+Una posible implementación de un Token ERC20 sería la siguiente:
+
+++++
+<script
+  src="https://gist.github.com/Bigomby/5edac8e24383e92a0339e5151b32d17c.js" />
+++++
