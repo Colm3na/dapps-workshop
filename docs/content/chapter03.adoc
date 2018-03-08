@@ -32,7 +32,7 @@ image::figure04.png[]
 
 [NOTE]
 ====
-Actualmente existen dos versiones de web3.js. La versión actual y la beta
+Existen dos versiones de web3.js. La versión actual y la beta
 de la versión 1.0. *En esta guía se usará la versión 1.0 beta*.
 ====
 
@@ -63,7 +63,6 @@ proyecto:
 .Crear proyecto con Vue.js
 [source, bash]
 ----
-cd workshop
 vue init webpack erc20-webui
 ----
 
@@ -90,3 +89,60 @@ siguiente forma:
 
 ? *Should we run `npm install` for you after the project has been created? (recommended)* `npm`
 ****
+
+.Estructura de un proyecto Vue
+----
+.
+├── build
+│   ├── build.js
+│   ├── check-versions.js
+│   ├── logo.png
+│   ├── utils.js
+│   ├── vue-loader.conf.js
+│   ├── webpack.base.conf.js
+│   ├── webpack.dev.conf.js
+│   └── webpack.prod.conf.js
+├── config
+│   ├── dev.env.js
+│   ├── index.js
+│   └── prod.env.js
+├── index.html
+├── package.json
+├── package-lock.json
+├── README.md
+├── src
+│   ├── App.vue
+│   ├── assets
+│   │   └── logo.png
+│   ├── components
+│   │   └── HelloWorld.vue
+│   └── main.js
+└── static
+----
+
+A continuación eliminamos el fichero `src/components/HelloWorld.vue` y editamos
+el fichero `src/App.vue` para que quede de la siguiente forma:
+
+.`src/App.vue`
+[source, html]
+----
+<template>
+<div id="app">
+  Mi primera aplicación con Vue.js
+</div>
+</template>
+
+<script>
+export default {
+  name: 'App',
+};
+</script>
+----
+
+Para ejecutar un servidor de pruebas en local, ejecutamos el siguiente comando:
+
+.Iniciar servidor de pruebas
+[source, bash]
+----
+npm run dev
+----
